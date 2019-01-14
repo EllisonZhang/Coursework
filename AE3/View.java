@@ -1,6 +1,8 @@
 // the Interface 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -19,7 +21,7 @@ public class View extends JFrame {
 	private final int CHART_WIDTH = 700;
 	private final int CHART_HEIGHT = 500;
 	private FileHandling file;
-	private JTextArea rateArea;
+	public static JTextArea rateArea;
 	private JComboBox<String> X;
 	private JComboBox<String> Y;
 	private String fileName;
@@ -36,7 +38,7 @@ public class View extends JFrame {
 	}
 
 // use this to hold the selected bond details
-	public void creatTextArea() {
+	static public void creatTextArea() {
 		final int FILE_WIDTH = 250;
 		final int FILE_LENGTH = 60;
 		rateArea = new JTextArea();
@@ -45,7 +47,40 @@ public class View extends JFrame {
 
 	}
 
-// JfileChooser	
+    class MousePressListener implements MouseListener {
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			int x = e.getY();
+			int y = e.getX();	
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+   
+    }
+	
 	class openButtonClickListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			file = new FileHandling();
@@ -54,6 +89,7 @@ public class View extends JFrame {
 			ArrayList<BondTrade> trade = file.getTrade();
 			chart = new ChartComponent(trade);
 			chart.setBounds(50, 20, CHART_WIDTH, CHART_HEIGHT);
+//			chart.addMouseListener(new MousePressListener());
 			panel.add(chart);
 			repaint();
 		}
