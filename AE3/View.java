@@ -18,7 +18,7 @@ public class View extends JFrame {
 	private JLabel label;
 	private final int FRAME_WIDTH = 900;
 	private final int FRAME_HEIGHT = 600;
-	private final int CHART_WIDTH = 700;
+	private final int CHART_WIDTH = 800;
 	private final int CHART_HEIGHT = 500;
 	private FileHandling file;
 	public static JTextArea rateArea;

@@ -36,7 +36,6 @@ public class FileHandling {
 		JFileChooser fc = new JFileChooser(path);
 		fc.showOpenDialog(new JFrame());
 		try {
-
 			s = new Scanner(fc.getSelectedFile());
 			title = fc.getSelectedFile().getName();
 			System.out.println(title);
