@@ -1,53 +1,39 @@
 // the Interface 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 
-public class View extends JFrame{
+public class View extends JFrame {
 	private JPanel panel;
 	private JButton openButton;
 	private JButton quitButton;
-	private double value = 0.0;
 	private JLabel label;
-	private GridBagConstraints position;
 	private final int FRAME_WIDTH = 900;
-	private final int FRAME_HEIGHT = 600; 
+	private final int FRAME_HEIGHT = 600;
 	private final int CHART_WIDTH = 700;
-	private final int CHART_HEIGHT = 500; 
-	FileHandling file;
+	private final int CHART_HEIGHT = 500;
+	private FileHandling file;
 	private JTextArea rateArea;
-	private JComboBox X;
-	private JComboBox Y;
+	private JComboBox<String> X;
+	private JComboBox<String> Y;
 	private String fileName;
 	private ChartComponent chart;
-	public View () {
+	private ArrayList<BondTrade> trade = new ArrayList<BondTrade>();
+
+	public View() {
 		creatTextArea();
 		creatButton();
-		creatChart();
-		creatCombox ();
+		creatCombox();
+		creatLable();
 		creatPanel();
-		setSize(FRAME_WIDTH,FRAME_HEIGHT);
+		setSize(FRAME_WIDTH, FRAME_HEIGHT);
 	}
-	public void creatChart() {
-		chart = new ChartComponent();
-		chart.setBounds(50, 20, CHART_WIDTH, CHART_HEIGHT);
-	}
-	
 
 // use this to hold the selected bond details
 	public void creatTextArea() {
@@ -55,73 +41,117 @@ public class View extends JFrame{
 		final int FILE_LENGTH = 60;
 		rateArea = new JTextArea();
 		rateArea.setEditable(false);
-		rateArea.setBounds(500, 485, FILE_WIDTH,FILE_LENGTH);
+		rateArea.setBounds(500, 485, FILE_WIDTH, FILE_LENGTH);
+
 	}
+
 // JfileChooser	
-	class openButtonClickListener implements ActionListener{
+	class openButtonClickListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			file = new FileHandling();
 			fileName = file.title;
-			ArrayList<BondTrade> test = file.getTrade(); 
-			for(int i=0;i<= test.size()-1;i++) {
-				System.out.println(test.get(i).getYeild());
-			}
+			label.setText(fileName);
+			ArrayList<BondTrade> trade = file.getTrade();
+			chart = new ChartComponent(trade);
+			chart.setBounds(50, 20, CHART_WIDTH, CHART_HEIGHT);
+			panel.add(chart);
 			repaint();
-			
-//			ArrayList<BondTrade> test = file.getTrade(); 
-//			System.out.println(test.get(3).getYeild());
-//			String text = rateField.getText();
-//		    value += Double.parseDouble(text);
-//		    label.setText("Balance: "+value);
-//		    rateArea.append(value+ "\r\n");
-//		    rateArea.setText(String.valueOf(value));
-		}	
+		}
 	}
-    
+
 // quit program when user click quik button
-	class quitButtonClickListener implements ActionListener{
+	class quitButtonClickListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			System.exit(0);
-		}	
+		}
 	}
+
 	public void creatButton() {
 // open button
 		openButton = new JButton("Open");
 		ActionListener open = new openButtonClickListener();
 		openButton.addActionListener(open);
 		openButton.setBounds(620, 10, 100, 25);
-		label = new JLabel("fileName");
-		label.setBounds(300, 10,100, 25);
 // quit button	
-		quitButton	= new JButton("Quit");	
+		quitButton = new JButton("Quit");
 		ActionListener quit = new quitButtonClickListener();
-		quitButton.addActionListener(quit);		
+		quitButton.addActionListener(quit);
 		quitButton.setBounds(720, 10, 100, 25);
 	}
-	public void creatCombox () {
-		X = new JComboBox();
-	    X.addItem("Value");
-	    X.addItem("Days");
-	    X.addItem("Amout");
-	    X.setBounds(150,500, 100, 25);
-	    Y = new JComboBox();
-	    Y.addItem("Value");
-	    Y.addItem("Days");
-	    Y.addItem("Amout");
-	    Y.setBounds(270,500, 100, 25);
+
+	public void creatLable() {
+		label = new JLabel("fileName");
+		label.setBounds(300, 10, 200, 30);
 	}
-	
-	public void creatPanel() { 
+
+	class comboBoxClickListenerX implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			JComboBox comboBox = (JComboBox) e.getSource();
+			Object selected = comboBox.getSelectedItem();
+
+			if (selected.equals("X-Yield")) {
+				chart.presentXValue = chart.yield;
+				chart.repaint();
+				System.out.println("hello");
+			} else if (selected.equals("X-Days")) {
+				chart.presentXValue = chart.days;
+				chart.repaint();
+				System.out.println("hello1");
+			} else if (selected.equals("X-Amount")) {
+				chart.presentXValue = chart.amount;
+				chart.repaint();
+				System.out.println("hello2");
+			}
+		}
+	}
+
+	class comboBoxClickListenerY implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			JComboBox comboBox = (JComboBox) e.getSource();
+			Object selected = comboBox.getSelectedItem();
+//			
+			if (selected.equals("Y-Yield")) {
+				chart.presentYValue = chart.yield;
+				chart.repaint();
+				System.out.println("hello");
+			} else if (selected.equals("Y-Days")) {
+				chart.presentYValue = chart.days;
+				chart.repaint();
+				System.out.println("hello");
+			} else if (selected.equals("Y-Amount")) {
+				chart.presentYValue = chart.amount;
+				chart.repaint();
+				System.out.println("hello");
+			}
+		}
+	}
+
+	public void creatCombox() {
+		X = new JComboBox<String>();
+		X.addItem("X-Yield");
+		X.addItem("X-Days");
+		X.addItem("X-Amount");
+		X.setBounds(150, 500, 100, 25);
+		ActionListener changeXBox = new comboBoxClickListenerX();
+		X.addActionListener(changeXBox);
+		ActionListener changeYBox = new comboBoxClickListenerY();
+		Y = new JComboBox<String>();
+		Y.addItem("Y-Days");
+		Y.addItem("Y-Yield");
+		Y.addItem("Y-Amount");
+		Y.setBounds(270, 500, 100, 25);
+		Y.addActionListener(changeYBox);
+	}
+
+	public void creatPanel() {
 		panel = new JPanel();
 		panel.setLayout(null);
-		panel.add(rateArea);		
+		panel.add(rateArea);
 		panel.add(openButton);
 		panel.add(label);
-		panel.add(quitButton);
-		panel.add(chart);	
+		panel.add(quitButton);	
 		panel.add(X);
 		panel.add(Y);
-		add(panel);   		
+		add(panel);
 	}
-	
 }
